@@ -76,18 +76,16 @@ async function run() {
 
     // === 2. Prompt zusammenbauen ===
     const prompt = `### Aufgabe
-Schreibe eine **zweisprachige Zusammenfassung** (Deutsch **und** English).
+Schreibe eine **zweisprachige Zusammenfassung** für den Git‑Diff.
 
-**Format (bitte exakt einhalten)**
+**Ausgabeformat**
 DE: <max 150 Zeichen>
 EN: <max 150 characters>
 
-Danach – falls Breaking Changes erkennbar sind – eine gemeinsame Markdown-Aufzählung in einer Zeile pro Punkt, beide Sprachen durch " | " getrennt.
-Beispiel:
-• API-Endpunkt entfernt | • API endpoint removed
-
-Wenn es keine Breaking Changes gibt, schreibe genau diese Zeile:
-• Keine Breaking Changes. | • No breaking changes.
+**Breaking Changes**
+• Jede Zeile: Deutsch, Leerzeichen, "|", Leerzeichen, Englisch
+• Wenn keine Breaking Changes: 
+  • Keine Breaking Changes. | No breaking changes.
 
 ### Diff
 ${slicedDiff}`;;
