@@ -1,15 +1,22 @@
 name: "PR-Sense Test"
+
 on:  pull_request_target
+
 permissions:
   contents: read
   pull-requests: write
+  issues: write            # <-- neu: Kommentare in PRs
+
 jobs:
   review:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: ./            # lokale Action
         with:
           openai_key: ${{ secrets.OPENAI_API_KEY }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:                # <-- neu: Secrets an Container übergeben
+          GITHUB_TOKEN:   ${{ secrets.GITHUB_TOKEN }}
+          ORG_GIST_ID:    ${{ secrets.ORG_GIST_ID }}
+          ORG_GIST_TOKEN: ${{ secrets.ORG_GIST_TOKEN }} 

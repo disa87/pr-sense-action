@@ -2,9 +2,6 @@
   "name": "pr-sense-action",
   "version": "1.0.0",
   "type": "module",
-  "scripts": {
-    "build": "mkdir -p dist && cp src/index.js dist/index.js"
-},
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.0.0",
