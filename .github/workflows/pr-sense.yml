@@ -19,4 +19,4 @@ jobs:
         env:                # <-- neu: Secrets an Container übergeben
           GITHUB_TOKEN:   ${{ secrets.GITHUB_TOKEN }}
           ORG_GIST_ID:    ${{ secrets.ORG_GIST_ID }}
-          ORG_GIST_TOKEN: ${{ secrets.ORG_GIST_TOKEN }}
+          ORG_GIST_TOKEN: ${{ secrets.ORG_GIST_TOKEN }} 
