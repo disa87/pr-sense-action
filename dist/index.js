@@ -75,7 +75,22 @@ async function run() {
     const slicedDiff = diff.split("\n").slice(0, MAX_DIFF_LINES).join("\n");
 
     // === 2. Prompt zusammenbauen ===
-    const prompt = `Erstelle ein zweisprachiges TL;DR (Deutsch & English) für den folgenden Git‑Diff.\n\n**Richtlinien**\n• Je Sprache max. 150 Zeichen.\n• Danach erkennbare Breaking Changes als Markdown‑Bullets; falls keine → \"Keine Breaking Changes.\"\n\n--- BEGIN DIFF ---\n${slicedDiff}\n--- END DIFF ---`;
+    const prompt = `### Aufgabe
+Schreibe eine **zweisprachige Zusammenfassung** (Deutsch **und** English).
+
+**Format (bitte exakt einhalten)**
+DE: <max 150 Zeichen>
+EN: <max 150 characters>
+
+Danach – falls Breaking Changes erkennbar sind – eine gemeinsame Markdown-Aufzählung in einer Zeile pro Punkt, beide Sprachen durch " | " getrennt.
+Beispiel:
+• API-Endpunkt entfernt | • API endpoint removed
+
+Wenn es keine Breaking Changes gibt, schreibe genau diese Zeile:
+• Keine Breaking Changes. | • No breaking changes.
+
+### Diff
+${slicedDiff}`;;
 
     const model = slicedDiff.length > 15000 ? "gpt-4o-mini-200k" : "gpt-4o-mini";
     const openai = new OpenAI({ apiKey: OPENAI_KEY });
