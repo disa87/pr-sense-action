@@ -57,7 +57,8 @@ async function run() {
     const usage      = await loadUsage(fileName);
     const monthKey   = new Date().toISOString().slice(0, 7);   // "YYYY‑MM"
     const plan       = usage.plan || "free";
-    const prCount    = usage[monthKey] ?? 0;    = usage[monthKey] ?? 0;
+    const prCount    = usage[monthKey] ?? 0;
+
 
     const MAX_DIFF_LINES = 400;
     const OPENAI_KEY     = core.getInput("openai_key", { required: true });
