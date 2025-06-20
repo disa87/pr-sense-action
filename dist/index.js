@@ -12,25 +12,29 @@ import OpenAI from "openai";
 //     ORG_GIST_TOKEN  – Fine‑grained PAT mit Gist read+write
 // ------------------------------------------------------------
 
-// ---------- Helper: org‑wide Gist store ---------------------
+// ---------- Helper: org‑wide Gist store ---------------------------------
+//  • Ein einziges Gist enthält **pro Kunde genau eine Datei**:
+//    usage-<ACCOUNT_ID>.json  (z. B. usage-12345678.json)
+//  • ACCOUNT_ID ist github.context.payload.repository.owner.id  ⇒ eindeutig pro Org/User
+// -----------------------------------------------------------------------
 const GIST_ID   = process.env.ORG_GIST_ID;
 const GIST_HDR  = {
   Accept: "application/vnd.github+json",
   Authorization: `Bearer ${process.env.ORG_GIST_TOKEN}`
 };
 
-async function loadUsage() {
-  const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-    headers: GIST_HDR
-  });
+// gibt { plan, [YYYY-MM]: n } zurück (neu = {plan:"free"})
+async function loadUsage(fileName) {
+  const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, { headers: GIST_HDR });
   if (!res.ok) throw new Error("Gist‑Load fehlgeschlagen: " + res.status);
   const json = await res.json();
-  return JSON.parse(json.files["usage.json"].content || "{}");
+  const file = json.files[fileName];
+  return file ? JSON.parse(file.content) : { plan: "free" };
 }
-
-async function saveUsage(obj) {
+// speichert Objekt in die kunden­bezogene Datei
+aSync function saveUsage(fileName, obj) {
   const body = JSON.stringify({
-    files: { "usage.json": { content: JSON.stringify(obj) } }
+    files: { [fileName]: { content: JSON.stringify(obj) } }
   });
   const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
     method: "PATCH",
@@ -39,16 +43,21 @@ async function saveUsage(obj) {
   });
   if (!res.ok) throw new Error("Gist‑Save fehlgeschlagen: " + res.status);
 }
-// ------------------------------------------------------------
+// -----------------------------------------------------------------------
 
 async function run() {
   try {
     // === 0. Limits & Usage ===
     const planLimits = { free: 100, team: 1000, pro: 10000, enterprise: 100000 };
-    const usage      = await loadUsage();               // JSON‑Objekt aus Gist
+
+    // customer‑spezifische Datei bestimmen
+    const accountId  = github.context.payload.repository.owner.id || "anon";
+    const fileName   = `usage-${accountId}.json`;
+
+    const usage      = await loadUsage(fileName);
     const monthKey   = new Date().toISOString().slice(0, 7);   // "YYYY‑MM"
     const plan       = usage.plan || "free";
-    const prCount    = usage[monthKey] ?? 0;
+    const prCount    = usage[monthKey] ?? 0;    = usage[monthKey] ?? 0;
 
     const MAX_DIFF_LINES = 400;
     const OPENAI_KEY     = core.getInput("openai_key", { required: true });
@@ -108,8 +117,8 @@ ${slicedDiff}`;;
     await octo.rest.issues.createComment({ owner, repo, issue_number: number, body: summary });
 
     // === 4. Usage hochzählen & speichern ===
-    usage[monthKey] = (usage[monthKey] || 0) + 1;   // zählt ab 1. Tag automatisch neu, da anderer Key
-    await saveUsage(usage);
+    usage[monthKey] = (usage[monthKey] || 0) + 1;
+    await saveUsage(fileName, usage);(usage);
 
   } catch (err) {
     core.setFailed(err.message);
