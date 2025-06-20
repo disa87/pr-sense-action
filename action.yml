@@ -1,0 +1,13 @@
+name: "PR-Sense"
+description: "TL;DR & Risiko-Hinweis für jeden Pull-Request"
+author: "disa87"
+inputs:
+  openai_key:
+    description: "OpenAI API-Key"
+    required: true
+runs:
+  using: "node20"
+  main: "dist/index.js"
+branding:
+  icon: "message-square"
+  color: "blue"
