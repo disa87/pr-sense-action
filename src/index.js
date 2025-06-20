@@ -32,7 +32,7 @@ async function loadUsage(fileName) {
   return file ? JSON.parse(file.content) : { plan: "free" };
 }
 // speichert Objekt in die kunden­bezogene Datei
-aSync function saveUsage(fileName, obj) {
+async function saveUsage(fileName, obj) {
   const body = JSON.stringify({
     files: { [fileName]: { content: JSON.stringify(obj) } }
   });
