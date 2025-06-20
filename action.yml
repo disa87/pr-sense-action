@@ -1,7 +1,5 @@
 name: "PR-Sense"
-description: >
-  Instant bilingual TL;DR (German & English) plus breaking-change radar for every
-  pull request – no API key or additional setup required.
+description: "Instant bilingual TL;DR (German & English) plus breaking-change radar - pull request"
 author: "disa87"
 
 # keine Eingaben mehr nötig
