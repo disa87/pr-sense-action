@@ -1,13 +1,16 @@
 name: "PR-Sense"
-description: "TL;DR & Risiko-Hinweis für jeden Pull-Request"
+description: >
+  Instant bilingual TL;DR (German & English) plus breaking-change radar for every
+  pull request – no API key or additional setup required.
 author: "disa87"
-inputs:
-  openai_key:
-    description: "OpenAI API-Key"
-    required: true
+
+# keine Eingaben mehr nötig
+inputs: {}
+
 runs:
   using: "node20"
   main: "dist/index.js"
+
 branding:
   icon: "message-square"
   color: "blue"
