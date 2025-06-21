@@ -120,7 +120,7 @@ ${slicedDiff}
 
     // === 4. Usage hochzählen & speichern ===
     usage[monthKey] = (usage[monthKey] || 0) + 1;
-    await saveUsage(fileName, usage);(usage);
+    await saveUsage(fileName, usage);
 
   } catch (err) {
     core.setFailed(err.message);
