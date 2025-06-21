@@ -85,20 +85,21 @@ async function run() {
     const slicedDiff = diff.split("\n").slice(0, MAX_DIFF_LINES).join("\n");
 
     // === 2. Prompt zusammenbauen ===
-    const prompt = `### Aufgabe
-Schreibe eine **zweisprachige Zusammenfassung** für den Git‑Diff.
+const prompt = `
+### Aufgabe
+Gib exakt **drei** Zeilen zurück:
 
-**Ausgabeformat**
-DE: <max 150 Zeichen>
-EN: <max 150 characters>
-
-**Breaking Changes**
-• Jede Zeile: Deutsch, Leerzeichen, "|", Leerzeichen, Englisch
-• Wenn keine Breaking Changes: 
-  • Keine Breaking Changes. | No breaking changes.
+1. \`DE: …\`  (max 150 Zeichen, kurze Zusammenfassung auf Deutsch)
+2. \`EN: …\`  (max 150 characters, same summary in English)
+3. Eine Zeile für Breaking Changes:
+   • <Deutsch> | <English>
+   Wenn es keine Breaking Changes gibt, schreibe **genau**:
+   • Keine Breaking Changes. | No breaking changes.
 
 ### Diff
-${slicedDiff}`;;
+${slicedDiff}
+`;
+
 
     const model = slicedDiff.length > 15000 ? "gpt-4o-mini-200k" : "gpt-4o-mini";
     const openai = new OpenAI({ apiKey: OPENAI_KEY });
